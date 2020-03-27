@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ExpenseApp</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string-array name="initial_categories">
+        <item>Clothing</item>
+        <item>Food</item>
+        <item>Drinks</item>
+        <item>Exercise</item>
+        <item>Health</item>
+        <item>Transport</item>
+        <item>Fuel</item>
+        <item>Education</item>
+        <item>Phone</item>
+        <item>Fun</item>
+        <item>Vacation</item>
+        <item>Apartment</item>
+
+    </string-array>
+
+
+</resources>
