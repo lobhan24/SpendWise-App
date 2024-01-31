@@ -74,19 +74,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean addExp(String category, int amount, int total, String date) {
+    public void AddExp(String category, int amount, String date) {
+        boolean insertData;
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_expCat, category);
-        contentValues.put(COL_expAmount, amount);
-        contentValues.put(COL_total, total);
-        contentValues.put(COL_date, date);
-        long result = db.insert(EXPENSES_TABLE_NAME, null, contentValues);
+
+        // Check if it's an income or expense
+        if (category.equals("Income")) {
+            // Subtract the income amount from the total
+            int newTotal = totalForToday() - amount;
+            ContentValues values = new ContentValues();
+            values.put(COL_expCat, category);
+            values.put(COL_expAmount, amount);
+            values.put(COL_total, newTotal);
+            values.put(COL_date, date);
+            insertData = db.insert(EXPENSES_TABLE_NAME, null, values) != -1;
+        } else {
+            // Add the expense amount to the total
+            int newTotal = totalForToday() + amount;
+            ContentValues values = new ContentValues();
+            values.put(COL_expCat, category);
+            values.put(COL_expAmount, amount);
+            values.put(COL_total, newTotal);
+            values.put(COL_date, date);
+            insertData = db.insert(EXPENSES_TABLE_NAME, null, values) != -1;
+        }
+
         db.close();
-        if (result == -1)
-            return false;
-        else return true;
+
+        if (insertData) {
+            Toast.makeText(context, "Successfully inserted!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
 
     public ArrayList<ListModel> getExpensesList() {
         ArrayList<ListModel> listOfExpenses = new ArrayList();
@@ -280,6 +302,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(query3);
 
     }
+
+    public boolean addIncome(String category, int amount, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_expCat, category);
+        values.put(COL_expAmount, amount);
+        values.put(COL_total, totalForToday() - amount); // Adjust total for income
+        values.put(COL_date, date);
+
+        long result = db.insert(EXPENSES_TABLE_NAME, null, values);
+        db.close();
+
+        return result != -1;
+    }
+
 
 
 }
